@@ -16,7 +16,6 @@ from .models import User
 
 class SignupStepOneSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    username = serializers.CharField(max_length=150)
     phone_number = serializers.CharField(max_length=15)
     password = serializers.CharField(max_length=128)
     repeat_password = serializers.CharField(max_length=128)
@@ -25,13 +24,6 @@ class SignupStepOneSerializer(serializers.Serializer):
         validated_data.pop("repeat_password")
         user = User.objects.create_user(**validated_data)
         return user
-
-    def validate_username(self, value):
-        if value.lower() == "admin":
-            raise serializers.ValidationError("Username can't be 'admin'!!")
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("This username is already taken!!")
-        return value
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -68,11 +60,13 @@ class SignupStepTwoSerializer(serializers.Serializer):
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
-        username = attrs.get("username")
+        phone_number = attrs.get("phone_number")
         password = attrs.get("password")
 
         user = authenticate(
-            request=self.context.get("request"), username=username, password=password
+            request=self.context.get("request"),
+            phone_number=phone_number,
+            password=password,
         )
 
         if not user:
