@@ -25,6 +25,7 @@ inflection==0.5.1
 Inflector==3.1.1
 jsonschema==4.22.0
 jsonschema-specifications==2023.12.1
+kavenegar==1.1.2
 Markdown==3.6
 mypy-extensions==1.0.0
 oauthlib==3.2.2
