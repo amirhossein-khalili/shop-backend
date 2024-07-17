@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_spectacular",
     "accounts.apps.AccountsConfig",
+    "product.apps.ProductConfig",
 ]
 
 MIDDLEWARE = [
