@@ -156,7 +156,7 @@ class SignupStepTwoView(APIView):
 
                 if code == code_data:
                     user = User(
-                        username=user_data["username"], email=user_data["email"]
+                        phone_number=user_data["phone_number"], email=user_data["email"]
                     )
                     user.set_password(user_data["password"])
                     user.save()
