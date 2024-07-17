@@ -8,40 +8,54 @@ from .models import User
 
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
-    add_from = UserCreationForm
+    add_form = UserCreationForm
+
+    list_display = ("email", "phone_number", "is_admin")
+    list_filter = ("is_admin",)
+    readonly_fields = ("last_login",)
 
     fieldsets = (
+        ("Main", {"fields": ("email", "phone_number", "full_name", "password")}),
         (
-            None,
+            "Permissions",
             {
-                "fields": ("username", "email", "full_name", "password"),
+                "fields": (
+                    "is_active",
+                    "is_admin",
+                    "is_superuser",
+                    "last_login",
+                    "groups",
+                    "user_permissions",
+                )
             },
         ),
-        (
-            "permissions",
-            {"fields": ("is_active", "is_admin", "last_login")},
-        ),
     )
+
     add_fieldsets = (
         (
             None,
             {
-                "fields": ("username", "email", "full_name", "password1", "password2"),
+                "fields": (
+                    "phone_number",
+                    "email",
+                    "full_name",
+                    "password1",
+                    "password2",
+                )
             },
         ),
-        (
-            "permissions",
-            {"fields": ("is_active", "is_admin", "last_login")},
-        ),
     )
-    ordering = (
-        "email",
-        "phone_number",
-    )
-    search_fields = ("username", "email", "full_name")
-    list_filter = ("is_admin", "is_active")
-    list_display = ("username", "email", "full_name", "is_staff")
-    filter_horizontal = ()
+
+    search_fields = ("email", "full_name")
+    ordering = ("full_name",)
+    filter_horizontal = ("groups", "user_permissions")
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        is_superuser = request.user.is_superuser
+        if not is_superuser:
+            form.base_fields["is_superuser"].disabled = True
+        return form
 
 
 admin.site.unregister(Group)
