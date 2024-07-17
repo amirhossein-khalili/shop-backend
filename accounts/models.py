@@ -1,21 +1,20 @@
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from .managers import UserManager
 
 
-class User(AbstractUser):
-    email = models.EmailField(max_length=120, unique=True)
-    phone_number = models.CharField(max_length=15, unique=True)
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(max_length=255, unique=True)
+    phone_number = models.CharField(max_length=11, unique=True)
+    full_name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    full_name = models.CharField(max_length=60)
 
     objects = UserManager()
 
     USERNAME_FIELD = "phone_number"
-    REQUIRED_FIELDS = ["user_name", "phone_number", "email"]
+    REQUIRED_FIELDS = ["email", "full_name"]
 
     def __str__(self):
         return self.email
@@ -33,3 +32,12 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "user"
         verbose_name_plural = "users"
+
+
+# class OtpCode(models.Model):
+#     phone_number = models.CharField(max_length=11, unique=True)
+#     code = models.PositiveSmallIntegerField()
+#     created = models.DateTimeField(auto_now=True)
+
+#     def __str__(self):
+#         return f"{self.phone_number} - {self.code} - {self.created}"
