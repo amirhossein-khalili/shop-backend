@@ -5,10 +5,23 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
-
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+# =============================================================================
+#
+#               ETC CONFIGS AND PARTS
+#
+# =============================================================================
+
+
+# this part is added because when user asked url without back slash it returns 404 error
+APPEND_SLASH = False
+
+
+AUTH_USER_MODEL = "accounts.User"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -16,7 +29,20 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+
+ROOT_URLCONF = "shop.urls"
+
+WSGI_APPLICATION = "shop.wsgi.application"
+
+
+# =============================================================================
+#
+#               INSTALLED APPS AND MIDDLEWARES
+#
+# =============================================================================
 
 
 INSTALLED_APPS = [
@@ -32,6 +58,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "accounts.apps.AccountsConfig",
     "product.apps.ProductConfig",
+    "file.apps.FileConfig",
 ]
 
 MIDDLEWARE = [
@@ -44,25 +71,32 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "shop.urls"
 
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-            ],
-        },
-    },
-]
+# =============================================================================
+#
+#               LANGUAGE , TIME ZONE SETTINGS
+#
+# =============================================================================
 
-WSGI_APPLICATION = "shop.wsgi.application"
+LANGUAGE_CODE = "en-us"
+
+TIME_ZONE = "Asia/Tehran"
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
+
+# =============================================================================
+#
+#               DATABASES CONFIG
+#
+# =============================================================================
+
+REDIS_HOST = os.environ.get("REDIS_HOST")
+REDIS_PORT = os.environ.get("REDIS_PORT")
+REDIS_DB = os.environ.get("REDIS_DB")
 
 CACHES = {
     "default": {
@@ -83,52 +117,11 @@ DATABASES = {
 }
 
 
-# Redis configuration
-REDIS_HOST = os.environ.get("REDIS_HOST")
-REDIS_PORT = os.environ.get("REDIS_PORT")
-REDIS_DB = os.environ.get("REDIS_DB")
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
-
-
-STATIC_URL = "static/"
-
-
-# Media Files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "Asia/Tehran"
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
+# =============================================================================
+#
+#               DOCUMENTATION SETTINGS
+#
+# =============================================================================
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "DJANGO-REST",
@@ -137,6 +130,12 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
+
+# =============================================================================
+#
+#               REST FRAME WORKS SETTINGS
+#
+# =============================================================================
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
@@ -155,6 +154,12 @@ REST_FRAMEWORK = {
     # "DEFAULT_METADATA_CLASS": "shop.metadata.CustomMetadata",
 }
 
+
+# =============================================================================
+#
+#               AUTHENTICATION AND AUTHORIZATION SETTINGS
+#
+# =============================================================================
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
@@ -190,10 +195,27 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
 
-AUTH_USER_MODEL = "accounts.User"
+# =============================================================================
+#
+#               EMAIL CONFIGS AND SETTINGS
+#
+# =============================================================================
 
-# EMAIL CONFIG
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
 EMAIL_PORT = os.environ.get("EMAIL_PORT")
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
@@ -203,11 +225,37 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
 
-# this part is added because when user asked url without back slash it returns 404 error
-APPEND_SLASH = False
+# =============================================================================
+#
+#               STATIC AND FILES AND TEMPLATES PART
+#
+# =============================================================================
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
 
 
-# liara Storages
+STATIC_URL = "static/"
+
+
+# Media Files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
@@ -215,3 +263,10 @@ AWS_S3_ENDPOINT_URL = os.environ.get("AWS_S3_ENDPOINT_URL")
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
 AWS_SERVICE_NAME = "s3"
 AWS_S3_FILE_OVERWRITE = False
+
+
+# =============================================================================
+#
+#
+#
+# =============================================================================
