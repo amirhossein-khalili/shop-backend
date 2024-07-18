@@ -9,9 +9,19 @@ from drf_spectacular.views import (
 )
 
 urlpatterns = [
+    # =============================================================================
+    # Admin Panel Part
+    # =============================================================================
     path("admin/", admin.site.urls),
+    # =============================================================================
+    # Applications and API Part
+    # =============================================================================
     path("api/accounts/", include("accounts.urls", namespace="account")),
     path("api/products/", include("product.urls", namespace="product")),
+    path("api/buckets/", include("file.urls", namespace="bucket")),
+    # =============================================================================
+    # Schema and Documentation Part
+    # =============================================================================
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/swagger-ui/",
@@ -23,4 +33,7 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
+    # =============================================================================
+    #
+    # =============================================================================
 ]
