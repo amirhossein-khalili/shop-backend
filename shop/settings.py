@@ -56,10 +56,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "drf_spectacular",
+    "django_celery_beat",
     "accounts.apps.AccountsConfig",
     "product.apps.ProductConfig",
     "file.apps.FileConfig",
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
